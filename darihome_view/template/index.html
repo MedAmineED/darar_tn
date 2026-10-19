@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>داري هوم — مصنوعة يدويًا من أجل بيتك</title>
+  <meta name="description" content="داري هوم — أثاث خشبي مصنوع يدويًا من خشب الصنوبر الصلب. Darihome — meubles en bois massif faits main." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind (CDN) + theme -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#442a22", "primary-container": "#5d4037", "on-primary": "#ffffff",
+            surface: "#f4faff", "surface-low": "#e9f6fd", "surface-c": "#e3f0f8",
+            "surface-high": "#ddeaf2", "surface-variant": "#d7e4ec",
+            "on-surface": "#111d23", "on-surface-variant": "#504441",
+            outline: "#827470", "outline-variant": "#d4c3be",
+            beige: "#ece0dc", wood: "#e0c9a6", blush: "#e7bdb1",
+          },
+          maxWidth: { container: "1280px" },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/main.css?v=2" />
+  <script src="assets/js/i18n.js?v=2"></script>
+</head>
+
+<body data-title-key="meta.home_title" class="font-body bg-surface text-on-surface">
+
+  <!-- ============ Skip link ============ -->
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:top-4 focus:start-4 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded">
+    <span data-i18n="nav.home">تخطّي</span>
+  </a>
+
+  <!-- ============ Header ============ -->
+  <header class="site-header on-light fixed top-0 inset-x-0 z-50" data-solid-at="60">
+    <div class="max-w-container mx-auto px-5 md:px-16">
+      <nav class="flex items-center justify-between h-20">
+        <a href="index.html" class="font-display text-2xl md:text-[28px] font-bold tracking-tight" data-i18n="brand.name">داري هوم</a>
+
+        <!-- Desktop nav -->
+        <ul class="hidden lg:flex items-center gap-9 text-[15px]">
+          <li><a href="index.html" class="nav-link is-active" data-i18n="nav.home">الرئيسية</a></li>
+          <li><a href="shop.html" class="nav-link" data-i18n="nav.shop">المتجر</a></li>
+          <li><a href="shop.html" class="nav-link" data-i18n="nav.categories">الفئات</a></li>
+          <li><a href="#story" class="nav-link" data-i18n="nav.about">من نحن</a></li>
+          <li><a href="#newsletter" class="nav-link" data-i18n="nav.contact">اتصل بنا</a></li>
+        </ul>
+
+        <!-- Actions -->
+        <div class="flex items-center gap-1 sm:gap-2">
+          <button data-lang-toggle class="hidden sm:inline-flex items-center justify-center h-10 min-w-10 px-3 rounded border border-current/30 text-sm font-semibold hover:bg-primary hover:text-on-primary hover:border-primary transition-colors" aria-label="Language">
+            <span data-i18n="nav.lang">FR</span>
+          </button>
+          <button class="h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.search">
+            <span class="material-symbols-outlined">search</span>
+          </button>
+          <a href="#" class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.wishlist">
+            <span class="material-symbols-outlined">favorite</span>
+          </a>
+          <a href="#" class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.account">
+            <span class="material-symbols-outlined">person</span>
+          </a>
+          <a href="#" class="relative h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.cart">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            <span data-cart-badge class="cart-badge hidden absolute -top-0.5 -end-0.5 min-w-5 h-5 px-1 rounded-full bg-primary text-on-primary text-[11px] font-semibold grid place-items-center">0</span>
+          </a>
+          <button data-open-menu class="lg:hidden h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.menu">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ Mobile drawer ============ -->
+  <div data-scrim class="scrim fixed inset-0 z-50 bg-black/40 lg:hidden"></div>
+  <aside data-drawer="menu" class="drawer fixed top-0 end-0 z-[55] h-full w-[82%] max-w-sm bg-surface shadow-2xl lg:hidden flex flex-col">
+    <div class="flex items-center justify-between h-20 px-6 border-b hairline">
+      <span class="font-display text-xl font-bold" data-i18n="brand.name">داري هوم</span>
+      <button data-close-menu class="h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5" data-i18n-attr="aria-label:nav.close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <nav class="flex-1 px-6 py-8">
+      <ul class="flex flex-col gap-6 text-lg font-display">
+        <li><a href="index.html" data-i18n="nav.home">الرئيسية</a></li>
+        <li><a href="shop.html" data-i18n="nav.shop">المتجر</a></li>
+        <li><a href="shop.html" data-i18n="nav.categories">الفئات</a></li>
+        <li><a href="#story" data-i18n="nav.about">من نحن</a></li>
+        <li><a href="#newsletter" data-i18n="nav.contact">اتصل بنا</a></li>
+      </ul>
+    </nav>
+    <div class="px-6 py-6 border-t hairline">
+      <button data-lang-toggle class="btn btn-ghost w-full py-3 text-sm">
+        <span class="material-symbols-outlined text-[20px]">language</span>
+        <span data-i18n="nav.lang">FR</span>
+      </button>
+    </div>
+  </aside>
+
+  <main id="main">
+
+    <!-- ============ Hero ============ -->
+    <section class="relative min-h-[92vh] flex items-center overflow-hidden">
+      <div class="hero-media absolute inset-0 -z-10" data-parallax>
+        <img src="assets/images/darihome-hero.jpg" alt="" class="w-full h-[112%] object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/25 to-surface/50"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-surface/40 via-transparent to-transparent"></div>
+      </div>
+
+      <div class="max-w-container mx-auto px-5 md:px-16 w-full">
+        <div class="max-w-2xl">
+          <p class="hero-fade text-xs font-semibold uppercase tracking-widest text-primary mb-5" style="--fade-delay:120ms" data-i18n="hero.eyebrow">حِرَفية خشبية أصيلة</p>
+          <h1 class="font-display font-bold text-primary leading-[1.05] text-5xl sm:text-6xl md:text-7xl">
+            <span class="block overflow-hidden"><span class="hero-word" style="--word-delay:150ms" data-i18n="hero.title_1">مصنوعة</span>
+            <span class="hero-word" style="--word-delay:260ms" data-i18n="hero.title_2">يدويًا</span></span>
+            <span class="block overflow-hidden"><span class="hero-word" style="--word-delay:370ms" data-i18n="hero.title_3">من أجل</span>
+            <span class="hero-word text-on-surface" style="--word-delay:480ms" data-i18n="hero.title_4">بيتك</span></span>
+          </h1>
+          <p class="hero-fade text-lg text-on-surface-variant mt-6 max-w-lg leading-relaxed" style="--fade-delay:640ms" data-i18n="hero.subtitle">
+            اكتشف قطع أثاث خشبية فريدة، مصمّمة بموادّ طبيعية وحِرفية خالدة وعناية بأدقّ التفاصيل.
+          </p>
+          <div class="hero-fade flex flex-wrap items-center gap-4 mt-9" style="--fade-delay:780ms">
+            <a href="shop.html" class="btn btn-primary px-8 py-4 text-sm">
+              <span data-i18n="hero.cta_primary">اكتشف المجموعة</span>
+              <span class="material-symbols-outlined flip-rtl text-[20px]">arrow_forward</span>
+            </a>
+            <a href="#story" class="btn btn-ghost px-8 py-4 text-sm text-primary" data-i18n="hero.cta_secondary">قصّتنا</a>
+          </div>
+        </div>
+      </div>
+
+      <a href="#categories" class="hero-fade absolute bottom-7 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-on-surface-variant" style="--fade-delay:1000ms">
+        <span class="text-[11px] uppercase tracking-widest" data-i18n="hero.scroll">اكتشف المزيد</span>
+        <span class="material-symbols-outlined animate-bounce">expand_more</span>
+      </a>
+    </section>
+
+    <!-- ============ Marquee strip ============ -->
+    <div class="marquee bg-primary text-on-primary py-4 select-none">
+      <div class="marquee__track text-sm font-semibold uppercase tracking-widest">
+        <span class="inline-flex items-center gap-14">
+          <span data-i18n="marquee.a">خشب صنوبر صلب</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.b">صناعة يدوية</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.c">توصيل لكامل الجمهورية</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.d">تشطيب زيتي طبيعي</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.e">تصميم مستدام</span><span class="text-wood">✦</span>
+        </span>
+        <span class="inline-flex items-center gap-14" aria-hidden="true">
+          <span data-i18n="marquee.a">خشب صنوبر صلب</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.b">صناعة يدوية</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.c">توصيل لكامل الجمهورية</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.d">تشطيب زيتي طبيعي</span><span class="text-wood">✦</span>
+          <span data-i18n="marquee.e">تصميم مستدام</span><span class="text-wood">✦</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- ============ Categories ============ -->
+    <section id="categories" class="py-20 md:py-28">
+      <div class="max-w-container mx-auto px-5 md:px-16">
+        <div class="text-center max-w-xl mx-auto mb-14 reveal">
+          <h2 class="font-display text-4xl md:text-5xl font-semibold" data-i18n="cats.title">تسوّق حسب الفئة</h2>
+          <p class="text-on-surface-variant mt-4" data-i18n="cats.subtitle">مجموعات منتقاة لكل ركن من أركان بيتك.</p>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <!-- Stools -->
+          <a href="shop.html" class="group product-card reveal relative block rounded-lg overflow-hidden aspect-[3/4]" style="--reveal-delay:0ms">
+            <div class="card-media absolute inset-0"><img src="assets/images/stool-rug.jpg" alt="" class="w-full h-full object-cover" /></div>
+            <div class="tile-scrim absolute inset-0"></div>
+            <div class="absolute bottom-0 inset-x-0 p-5 text-on-primary">
+              <h3 class="font-display text-2xl font-semibold" data-i18n="cats.stools">المقاعد</h3>
+              <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest mt-1 opacity-90">
+                <span data-i18n="cats.shop_now">تسوّق الآن</span>
+                <span class="material-symbols-outlined flip-rtl text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </span>
+            </div>
+          </a>
+          <!-- Tables -->
+          <a href="shop.html" class="group product-card reveal relative block rounded-lg overflow-hidden aspect-[3/4]" style="--reveal-delay:80ms">
+            <div class="card-media absolute inset-0"><img src="assets/images/desk.jpg" alt="" class="w-full h-full object-cover" /></div>
+            <div class="tile-scrim absolute inset-0"></div>
+            <div class="absolute bottom-0 inset-x-0 p-5 text-on-primary">
+              <h3 class="font-display text-2xl font-semibold" data-i18n="cats.tables">الطاولات</h3>
+              <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest mt-1 opacity-90">
+                <span data-i18n="cats.shop_now">تسوّق الآن</span>
+                <span class="material-symbols-outlined flip-rtl text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </span>
+            </div>
+          </a>
+          <!-- Shelves -->
+          <a href="shop.html" class="group product-card reveal relative block rounded-lg overflow-hidden aspect-[3/4]" style="--reveal-delay:160ms">
+            <div class="card-media absolute inset-0"><img src="assets/images/wall-shelves.jpg" alt="" class="w-full h-full object-cover" /></div>
+            <div class="tile-scrim absolute inset-0"></div>
+            <div class="absolute bottom-0 inset-x-0 p-5 text-on-primary">
+              <h3 class="font-display text-2xl font-semibold" data-i18n="cats.shelves">الرفوف الجدارية</h3>
+              <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest mt-1 opacity-90">
+                <span data-i18n="cats.shop_now">تسوّق الآن</span>
+                <span class="material-symbols-outlined flip-rtl text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </span>
+            </div>
+          </a>
+          <!-- Pets -->
+          <a href="shop.html" class="group product-card reveal relative block rounded-lg overflow-hidden aspect-[3/4]" style="--reveal-delay:240ms">
+            <div class="card-media absolute inset-0"><img src="assets/images/pet-house.jpg" alt="" class="w-full h-full object-cover" /></div>
+            <div class="tile-scrim absolute inset-0"></div>
+            <div class="absolute bottom-0 inset-x-0 p-5 text-on-primary">
+              <h3 class="font-display text-2xl font-semibold" data-i18n="cats.pets">أثاث الحيوانات</h3>
+              <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest mt-1 opacity-90">
+                <span data-i18n="cats.shop_now">تسوّق الآن</span>
+                <span class="material-symbols-outlined flip-rtl text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Featured products ============ -->
+    <section class="py-8 md:py-12">
+      <div class="max-w-container mx-auto px-5 md:px-16">
+        <div class="flex items-end justify-between gap-6 mb-12 reveal">
+          <div>
+            <h2 class="font-display text-4xl md:text-5xl font-semibold" data-i18n="featured.title">قطع مختارة</h2>
+            <p class="text-on-surface-variant mt-3" data-i18n="featured.subtitle">الأكثر رواجًا هذا الموسم، مصنوعة قطعةً قطعة.</p>
+          </div>
+          <a href="shop.html" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-primary shrink-0 nav-link">
+            <span data-i18n="featured.view_all">عرض كل القطع</span>
+            <span class="material-symbols-outlined flip-rtl text-[18px]">arrow_forward</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+
+          <!-- Card 1 -->
+          <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:0ms">
+            <a href="product.html" class="card-media relative block aspect-square bg-surface-low">
+              <img src="assets/images/stool-hero.jpg" alt="Kobenhavn" class="w-full h-full object-cover" />
+              <span class="absolute top-3 start-3 bg-primary text-on-primary px-2.5 py-1 rounded text-[11px] font-semibold uppercase tracking-wide" data-i18n="featured.sale">تخفيض</span>
+              <span class="absolute top-3 end-3 bg-wood text-primary px-2 py-1 rounded text-[11px] font-bold">-24%</span>
+              <div class="quick-add absolute bottom-3 inset-x-3">
+                <button data-add-cart class="btn btn-primary w-full py-2.5 text-xs" data-i18n="featured.add">أضف إلى السلة</button>
+              </div>
+            </a>
+            <div class="p-4">
+              <h3 class="font-display text-lg font-semibold leading-snug" data-i18n="products.stool_kobenhavn">مقعد كوبنهاغن</h3>
+              <p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.stools">المقاعد</p>
+              <div class="flex items-baseline gap-2 mt-2">
+                <span class="font-semibold text-primary">145 DT</span>
+                <span class="text-sm text-outline line-through">190 DT</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:80ms">
+            <a href="product.html" class="card-media relative block aspect-square bg-surface-low">
+              <img src="assets/images/wall-shelves.jpg" alt="Fjord" class="w-full h-full object-cover" />
+              <div class="quick-add absolute bottom-3 inset-x-3">
+                <button data-add-cart class="btn btn-primary w-full py-2.5 text-xs" data-i18n="featured.add">أضف إلى السلة</button>
+              </div>
+            </a>
+            <div class="p-4">
+              <h3 class="font-display text-lg font-semibold leading-snug" data-i18n="products.shelf_fjord">رفّ فيورد الجداري</h3>
+              <p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.shelves">الرفوف الجدارية</p>
+              <div class="flex items-baseline gap-2 mt-2">
+                <span class="font-semibold">220 DT</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:160ms">
+            <a href="product.html" class="card-media relative block aspect-square bg-surface-low">
+              <img src="assets/images/pet-house.jpg" alt="Aalborg" class="w-full h-full object-cover" />
+              <span class="absolute top-3 start-3 bg-primary text-on-primary px-2.5 py-1 rounded text-[11px] font-semibold uppercase tracking-wide" data-i18n="featured.sale">تخفيض</span>
+              <span class="absolute top-3 end-3 bg-wood text-primary px-2 py-1 rounded text-[11px] font-bold">-16%</span>
+              <div class="quick-add absolute bottom-3 inset-x-3">
+                <button data-add-cart class="btn btn-primary w-full py-2.5 text-xs" data-i18n="featured.add">أضف إلى السلة</button>
+              </div>
+            </a>
+            <div class="p-4">
+              <h3 class="font-display text-lg font-semibold leading-snug" data-i18n="products.pet_aalborg">بيت آلبورغ للحيوانات</h3>
+              <p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.pets">أثاث الحيوانات</p>
+              <div class="flex items-baseline gap-2 mt-2">
+                <span class="font-semibold text-primary">380 DT</span>
+                <span class="text-sm text-outline line-through">450 DT</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:240ms">
+            <a href="product.html" class="card-media relative block aspect-square bg-surface-low">
+              <img src="assets/images/desk.jpg" alt="Skagen" class="w-full h-full object-cover" />
+              <div class="quick-add absolute bottom-3 inset-x-3">
+                <button data-add-cart class="btn btn-primary w-full py-2.5 text-xs" data-i18n="featured.add">أضف إلى السلة</button>
+              </div>
+            </a>
+            <div class="p-4">
+              <h3 class="font-display text-lg font-semibold leading-snug" data-i18n="products.desk_skagen">مكتب سكاغن</h3>
+              <p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.tables">الطاولات</p>
+              <div class="flex items-baseline gap-2 mt-2">
+                <span class="font-semibold">490 DT</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Story / values ============ -->
+    <section id="story" class="py-20 md:py-28 mt-8 bg-surface-low">
+      <div class="max-w-container mx-auto px-5 md:px-16">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div class="reveal relative">
+            <div class="card-media rounded-lg overflow-hidden aspect-[4/5]">
+              <img src="assets/images/stools-garden.jpg" alt="" class="w-full h-full object-cover" />
+            </div>
+            <div class="hidden md:block absolute -bottom-6 -end-6 bg-primary text-on-primary rounded-lg p-6 w-44 shadow-xl">
+              <p class="font-display text-3xl font-bold" data-i18n="story.stat_3_n">+2000</p>
+              <p class="text-xs uppercase tracking-widest mt-1 opacity-80" data-i18n="story.stat_3_l">بيت سعيد</p>
+            </div>
+          </div>
+
+          <div class="reveal" style="--reveal-delay:120ms">
+            <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-4" data-i18n="story.eyebrow">قصّتنا</p>
+            <h2 class="font-display text-4xl md:text-5xl font-semibold leading-tight" data-i18n="story.title">الجمال في البساطة</h2>
+            <p class="text-lg text-on-surface-variant mt-6 leading-relaxed" data-i18n="story.body">
+              في داري هوم نؤمن بأن الأثاث يُصنع ليدوم. كل قطعة تُنحت من خشب الصنوبر الصلب على يد حِرفيين، فتحمل دفء الصنعة اليدوية وسكينة العيش الهادئ.
+            </p>
+            <div class="mt-10">
+              <div class="border-t-2 border-primary pt-4">
+                <p class="font-display text-4xl font-bold" data-i18n="story.stat_1_n">100%</p>
+                <p class="text-sm text-on-surface-variant mt-1" data-i18n="story.stat_1_l">خشب طبيعي</p>
+              </div>
+            </div>
+            <a href="shop.html" class="btn btn-primary px-8 py-4 text-sm mt-10">
+              <span data-i18n="story.cta">تعرّف علينا أكثر</span>
+              <span class="material-symbols-outlined flip-rtl text-[20px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Newsletter ============ -->
+    <section id="newsletter" class="py-20 md:py-28">
+      <div class="max-w-container mx-auto px-5 md:px-16">
+        <div class="reveal bg-primary text-on-primary rounded-lg px-6 py-14 md:p-20 text-center relative overflow-hidden">
+          <div class="absolute -top-16 -end-16 w-56 h-56 rounded-full bg-white/5"></div>
+          <div class="absolute -bottom-20 -start-10 w-72 h-72 rounded-full bg-white/5"></div>
+          <div class="relative max-w-xl mx-auto">
+            <h2 class="font-display text-3xl md:text-5xl font-semibold" data-i18n="news.title">انضمّ إلى عائلة داري هوم</h2>
+            <p class="mt-4 opacity-85" data-i18n="news.subtitle">اشترك لتصلك أخبار القطع الجديدة وإلهام العيش الهادئ.</p>
+            <form data-newsletter class="flex flex-col sm:flex-row gap-3 mt-8 max-w-md mx-auto">
+              <label class="sr-only" for="nl-email" data-i18n="news.placeholder">بريدك الإلكتروني</label>
+              <input id="nl-email" type="email" required class="flex-1 rounded px-4 py-3.5 text-on-surface bg-white border-0 focus:ring-2 focus:ring-wood outline-none" data-i18n-attr="placeholder:news.placeholder" placeholder="بريدك الإلكتروني" />
+              <button type="submit" class="btn bg-wood text-primary px-7 py-3.5 text-sm hover:bg-white transition-colors" data-i18n="news.button">اشترك</button>
+            </form>
+            <p data-form-note class="text-xs opacity-70 mt-4" data-i18n="news.note">لا رسائل مزعجة، يمكنك إلغاء الاشتراك في أي وقت.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="bg-surface-variant pt-16 pb-8">
+    <div class="max-w-container mx-auto px-5 md:px-16">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div class="col-span-2 md:col-span-1">
+          <a href="index.html" class="font-display text-2xl font-bold" data-i18n="brand.name">داري هوم</a>
+          <p class="text-sm text-on-surface-variant mt-3 max-w-[220px]" data-i18n="footer.tagline">مصنوعة بدقّة وعناية.</p>
+          <div class="flex items-center gap-2 mt-5">
+            <a href="#" aria-label="Instagram" class="h-9 w-9 grid place-items-center rounded-full bg-white hover:bg-primary hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[18px]">photo_camera</span></a>
+            <a href="#" aria-label="Facebook" class="h-9 w-9 grid place-items-center rounded-full bg-white hover:bg-primary hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[18px]">public</span></a>
+            <a href="#" aria-label="Pinterest" class="h-9 w-9 grid place-items-center rounded-full bg-white hover:bg-primary hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[18px]">push_pin</span></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-4" data-i18n="footer.col_shop">المتجر</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li><a href="shop.html" class="hover:text-primary transition-colors" data-i18n="footer.all">كل المنتجات</a></li>
+            <li><a href="shop.html" class="hover:text-primary transition-colors" data-i18n="footer.furniture">الأثاث</a></li>
+            <li><a href="shop.html" class="hover:text-primary transition-colors" data-i18n="footer.accessories">الإكسسوارات</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-4" data-i18n="footer.col_service">الخدمة</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.faq">الأسئلة الشائعة</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.shipping">الشحن والإرجاع</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.care">دليل العناية</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-4" data-i18n="footer.col_contact">تواصل</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li><a href="#newsletter" class="hover:text-primary transition-colors" data-i18n="footer.get_in_touch">تواصل معنا</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.stores">المتاجر</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t hairline mt-12 pt-6 text-center">
+        <p class="text-sm text-on-surface-variant" data-i18n="footer.rights">© 2026 داري هوم. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js?v=2"></script>
+</body>
+</html>

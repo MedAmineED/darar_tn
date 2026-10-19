@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+npm-debug.log*
+.env
+.env*.local
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+# Design reference only — not needed to build/run the app.
+template

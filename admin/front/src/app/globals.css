@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-plex: 'IBM Plex Sans Arabic', var(--font-inter);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-on-surface;
+  }
+
+  /* Arabic (RTL) benefits from slightly looser line height. */
+  html[dir='rtl'] body {
+    line-height: 1.7;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+}
+
+/* Thin, unobtrusive scrollbars to match the flat SaaS aesthetic. */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.outline.variant') transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: theme('colors.outline.variant');
+    border-radius: 9999px;
+  }
+}
+
+/* Interface typography follows the selected writing direction. */
+html[lang='ar'] body {
+  font-family: var(--font-plex);
+}
+html[lang='fr'] body,
+html[lang='fr'] h1,
+html[lang='fr'] h2,
+html[lang='fr'] h3,
+html[lang='fr'] h4,
+html[lang='fr'] .font-heading {
+  font-family: var(--font-inter);
+}
+
+/* Compact workspace density: leave visual space for the actual records. */
+.admin-workspace table {
+  font-size: 0.8125rem;
+}
+.admin-workspace thead th {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  background: #f6f3f280;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.admin-workspace tbody td,
+.admin-workspace tbody th {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
+/* Fast, quiet feedback: motion responds to actions without moving the layout. */
+.motion-control {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease,
+    transform 120ms ease;
+}
+.motion-control:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+.admin-workspace tbody tr {
+  transition: background-color 150ms ease;
+}
+input,
+select,
+textarea {
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .motion-control:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Governorate count labels on the traffic map (Leaflet tooltips). */
+.leaflet-tooltip.gov-count {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  font: 600 11px/1 Inter, sans-serif;
+  color: #1c1b1b;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 3px #fff;
+}
+.leaflet-tooltip.gov-count::before {
+  display: none;
+}

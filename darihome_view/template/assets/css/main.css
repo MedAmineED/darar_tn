@@ -1,0 +1,315 @@
+/* ============================================================
+   Darihome — Artisanal Nordic Minimalist
+   Custom layer on top of Tailwind (CDN).
+   Handles: bilingual fonts, RTL, motion, components.
+   ============================================================ */
+
+:root {
+  --primary: #442a22;
+  --primary-container: #5d4037;
+  --on-primary: #ffffff;
+  --surface: #f4faff;
+  --surface-container-low: #e9f6fd;
+  --surface-container: #e3f0f8;
+  --surface-container-high: #ddeaf2;
+  --surface-variant: #d7e4ec;
+  --on-surface: #111d23;
+  --on-surface-variant: #504441;
+  --outline: #827470;
+  --outline-variant: #d4c3be;
+  --secondary-container: #ece0dc;
+  --accent-wood: #e0c9a6;
+  --primary-fixed-dim: #e7bdb1;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ----------------------------------------------------------------
+   Bilingual typography — switch face by document language
+   ---------------------------------------------------------------- */
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Latin (French) — Playfair Display + Inter */
+html[lang="fr"] body,
+html[lang="fr"] .font-body { font-family: "Inter", system-ui, sans-serif; }
+html[lang="fr"] .font-display { font-family: "Playfair Display", Georgia, serif; }
+
+/* Arabic — Amiri (display) + Tajawal (body) */
+html[lang="ar"] body,
+html[lang="ar"] .font-body { font-family: "Tajawal", system-ui, sans-serif; }
+html[lang="ar"] .font-display { font-family: "Amiri", "Playfair Display", serif; }
+
+/* Arabic text tends to sit smaller; nudge display up for balance */
+html[lang="ar"] .font-display { line-height: 1.35; }
+html[lang="ar"] .tracking-widest { letter-spacing: 0 !important; }
+html[lang="ar"] .uppercase { text-transform: none; } /* Arabic has no case */
+
+/* ----------------------------------------------------------------
+   Direction: mirror decorative arrows in RTL
+   ---------------------------------------------------------------- */
+html[dir="rtl"] .flip-rtl { display: inline-block; transform: scaleX(-1); }
+
+/* Language switch cross-fade */
+.lang-switching * { transition: none !important; }
+body { transition: opacity 0.25s ease; }
+body.lang-fading { opacity: 0; }
+
+/* ----------------------------------------------------------------
+   Header — transparent over hero, solid after scroll
+   ---------------------------------------------------------------- */
+.site-header {
+  transition: background-color 0.4s var(--ease-out-soft),
+              box-shadow 0.4s var(--ease-out-soft),
+              backdrop-filter 0.4s ease;
+}
+.site-header.is-solid {
+  background-color: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: saturate(140%) blur(12px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--outline-variant) 60%, transparent);
+}
+.site-header.on-light { color: var(--on-surface); }
+
+/* Nav underline grow */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: -4px;
+  height: 1.5px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: inline-start;
+  transition: transform 0.35s var(--ease-out-soft);
+}
+.nav-link:hover::after,
+.nav-link.is-active::after { transform: scaleX(1); }
+
+/* ----------------------------------------------------------------
+   Scroll reveal
+   ---------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-out-soft), transform 0.8s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+
+.reveal-img { clip-path: inset(0 0 0 0); }
+
+/* Hero headline: word-by-word rise */
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(120%);
+  animation: wordRise 0.9s var(--ease-out-soft) forwards;
+  animation-delay: var(--word-delay, 0ms);
+}
+@keyframes wordRise { to { opacity: 1; transform: none; } }
+
+.hero-fade {
+  opacity: 0;
+  animation: fadeUp 1s var(--ease-out-soft) forwards;
+  animation-delay: var(--fade-delay, 0ms);
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: none; } }
+
+/* Slow ken-burns drift on hero image */
+.hero-media { overflow: hidden; }
+.hero-media img { animation: kenBurns 18s ease-in-out infinite alternate; }
+@keyframes kenBurns {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.16) translateY(-1.5%); }
+}
+
+/* ----------------------------------------------------------------
+   Product & category cards
+   ---------------------------------------------------------------- */
+.card-media { overflow: hidden; }
+.card-media img {
+  transition: transform 0.9s var(--ease-out-soft);
+  will-change: transform;
+}
+.group:hover .card-media img,
+.product-card:hover .card-media img { transform: scale(1.07); }
+
+.product-card {
+  transition: transform 0.5s var(--ease-out-soft), box-shadow 0.5s var(--ease-out-soft);
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 45px -22px rgba(17, 29, 35, 0.28);
+}
+
+/* Category tile caption gradient */
+.tile-scrim {
+  background: linear-gradient(to top, rgba(17,29,35,0.62) 0%, rgba(17,29,35,0.15) 45%, transparent 75%);
+}
+
+/* Quick "add" reveal */
+.quick-add {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s var(--ease-out-soft), transform 0.4s var(--ease-out-soft);
+}
+.product-card:hover .quick-add,
+.product-card:focus-within .quick-add { opacity: 1; transform: none; }
+
+/* ----------------------------------------------------------------
+   Buttons
+   ---------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 0.25rem;
+  transition: transform 0.2s var(--ease-out-soft), background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-container); box-shadow: 0 12px 24px -12px rgba(68,42,34,0.6); }
+.btn-ghost { border: 1px solid currentColor; }
+.btn-ghost:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+
+/* ----------------------------------------------------------------
+   Forms — beige field, bottom border only
+   ---------------------------------------------------------------- */
+.field-underline {
+  background: var(--secondary-container);
+  border: 0;
+  border-bottom: 1px solid var(--on-surface);
+  border-radius: 0.25rem 0.25rem 0 0;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+.field-underline:focus {
+  outline: none;
+  border-bottom-color: var(--primary);
+  background: color-mix(in srgb, var(--secondary-container) 70%, white);
+}
+
+/* Price range slider */
+input[type="range"].range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: var(--outline-variant);
+  border-radius: 999px;
+}
+input[type="range"].range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px; width: 16px;
+  border-radius: 999px;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+input[type="range"].range::-moz-range-thumb {
+  height: 16px; width: 16px; border: 0;
+  border-radius: 999px; background: var(--primary); cursor: pointer;
+}
+
+/* ----------------------------------------------------------------
+   Accordion (product specs)
+   ---------------------------------------------------------------- */
+.accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ease-out-soft);
+}
+.accordion-body > div { overflow: hidden; }
+.accordion.is-open .accordion-body { grid-template-rows: 1fr; }
+.accordion.is-open .accordion-icon { transform: rotate(180deg); }
+.accordion-icon { transition: transform 0.4s var(--ease-out-soft); }
+
+/* ----------------------------------------------------------------
+   Mobile drawer / off-canvas
+   ---------------------------------------------------------------- */
+.drawer {
+  transition: transform 0.45s var(--ease-out-soft);
+  transform: translateX(100%);
+}
+/* Closed state only — drops out the moment .is-open is added, so the
+   open rule below never has to win a specificity battle. */
+html[dir="rtl"] .drawer:not(.is-open) { transform: translateX(-100%); }
+.drawer.is-open { transform: translateX(0); }
+.scrim {
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.scrim.is-open { opacity: 1; visibility: visible; }
+
+/* Cart badge pop */
+.cart-badge { transition: transform 0.3s var(--ease-out-soft); }
+.cart-badge.pop { transform: scale(1.4); }
+
+/* ----------------------------------------------------------------
+   Chips / filters
+   ---------------------------------------------------------------- */
+.chip {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* Thumbnail gallery selected state */
+.thumb { transition: box-shadow 0.25s ease, transform 0.25s ease; }
+.thumb.is-active { box-shadow: 0 0 0 2px var(--primary); }
+.thumb:hover { transform: translateY(-2px); }
+
+/* Zoomable main product image */
+.zoomable { cursor: zoom-in; overflow: hidden; }
+.zoomable img { transition: transform 0.5s var(--ease-out-soft); }
+.zoomable.zoomed { cursor: zoom-out; }
+.zoomable.zoomed img { transform: scale(1.8); }
+
+/* Utility: hairline divider */
+.hairline { border-color: var(--outline-variant); }
+
+/* Focus visibility for keyboard users */
+a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Marquee strip */
+.marquee { overflow: hidden; }
+.marquee__track {
+  display: inline-flex;
+  gap: 3.5rem;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+}
+html[dir="rtl"] .marquee__track { animation-direction: reverse; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+
+/* Custom selection */
+::selection { background: var(--primary); color: #fff; }
+
+/* Slim scrollbar */
+* { scrollbar-width: thin; scrollbar-color: var(--outline-variant) transparent; }
+
+/* ----------------------------------------------------------------
+   Reduced motion
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .hero-word, .hero-fade { opacity: 1; transform: none; }
+}

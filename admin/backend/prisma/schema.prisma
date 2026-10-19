@@ -1,0 +1,515 @@
+// Darya Admin — Prisma schema
+// Full, future-ready data model. Only the auth/RBAC models have module code in
+// this phase; the catalog/commerce/settings models are migrated now so that
+// later phases add module code against a stable schema (no rewrites).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth & RBAC  (module code built this phase)
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String    @unique
+  password    String
+  isActive    Boolean   @default(true)
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  roles         UserRole[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+
+  @@index([isActive])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique // SUPER_ADMIN | ADMIN | MANAGER | custom
+  description String?
+  isSystem    Boolean  @default(false) // system roles cannot be deleted
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  name        String   @unique // "resource:action", e.g. "product:create"
+  resource    String // product, category, order, customer, user, role, setting, dashboard, audit
+  action      String // create, read, update, delete, manage
+  description String?
+  createdAt   DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@index([resource])
+  @@map("permissions")
+}
+
+model UserRole {
+  userId     String
+  roleId     String
+  assignedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique // sha256 of the raw refresh token
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String // e.g. "product.created", "order.status_changed"
+  entity    String // e.g. "Product", "Order"
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Catalog  (schema only now — module code in a later phase)
+// ─────────────────────────────────────────────────────────────
+
+model Category {
+  id            String   @id @default(cuid())
+  nameAr        String
+  nameFr        String
+  slug          String   @unique
+  descriptionAr String?  @db.Text
+  descriptionFr String?  @db.Text
+  image         String?
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  parentId      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  products Product[]
+
+  @@index([parentId])
+  @@index([isActive])
+  @@map("categories")
+}
+
+model Product {
+  id                 String        @id @default(cuid())
+  nameAr             String
+  nameFr             String
+  slug               String        @unique
+  shortDescriptionAr String?       @db.Text
+  shortDescriptionFr String?       @db.Text
+  descriptionAr      String?       @db.Text
+  descriptionFr      String?       @db.Text
+  sku                String?       @unique
+  price              Decimal       @db.Decimal(10, 2)
+  oldPrice           Decimal?      @db.Decimal(10, 2)
+  // Purchase/production cost per unit; used for gross profit (no VAT).
+  costPrice          Decimal?      @db.Decimal(10, 2)
+  status             ProductStatus @default(DRAFT)
+  isFeatured         Boolean       @default(false)
+  categoryId         String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  category   Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  images     ProductImage[]
+  orderItems OrderItem[]
+  inventory  InventoryItem?
+  packItems  PackItem[]
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([isFeatured])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  url       String
+  altAr     String?
+  altFr     String?
+  sortOrder Int      @default(0)
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Commerce  (schema only now — module code in a later phase)
+// ─────────────────────────────────────────────────────────────
+
+model Customer {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String?  @unique
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([phone])
+  @@index([createdAt])
+  @@map("customers")
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  customerId      String?
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentMethod   String?
+  subtotal        Decimal       @db.Decimal(10, 2)
+  discountAmount  Decimal       @default(0) @db.Decimal(10, 2)
+  shippingAmount  Decimal       @default(0) @db.Decimal(10, 2)
+  totalAmount     Decimal       @db.Decimal(10, 2)
+  // Snapshot of customer contact at time of order (history stays correct)
+  customerName    String
+  customerPhone   String?
+  customerEmail   String?
+  shippingAddress String?       @db.Text
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  customer  Customer?       @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items     OrderItem[]
+  inventory OrderInventory?
+
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([paymentStatus, status, createdAt])
+  @@index([customerId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id            String   @id @default(cuid())
+  orderId       String
+  productId     String?
+  // Snapshot of product at time of order (price/name stay historically correct)
+  productNameAr String
+  productNameFr String
+  productSku    String?
+  productPrice  Decimal  @db.Decimal(10, 2)
+  quantity      Int
+  total         Decimal  @db.Decimal(10, 2)
+  // Unit purchase cost frozen at order time (null = cost unknown then).
+  unitCost      Decimal? @db.Decimal(10, 2)
+  // Set when the line came from an offer pack (pack price spread over lines).
+  packId        String?
+  packNameAr    String?
+  packNameFr    String?
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  pack    Pack?    @relation(fields: [packId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([packId])
+  @@map("order_items")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Settings  (schema only now — flexible key/value, JSON payload)
+// ─────────────────────────────────────────────────────────────
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text // JSON-encoded; supports multilingual objects
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+// Stock is deliberately separate from catalog and immutable order snapshots.
+enum OrderStockState {
+  LEGACY
+  UNCOMMITTED
+  DEDUCTED
+  RESTORED
+}
+
+enum StockMovementKind {
+  ADJUSTMENT
+  DEDUCTION
+  RESTORATION
+}
+
+model InventoryItem {
+  productId         String          @id
+  quantity          Int             @default(0)
+  lowStockThreshold Int             @default(0)
+  updatedAt         DateTime        @updatedAt
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Restrict)
+  movements         StockMovement[]
+
+  @@index([quantity])
+  @@map("inventory_items")
+}
+
+model OrderInventory {
+  creationKey String?         @unique
+  requestHash String?
+  orderId     String          @id
+  state       OrderStockState @default(UNCOMMITTED)
+  updatedAt   DateTime        @updatedAt
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  movements   StockMovement[]
+
+  @@map("order_inventory")
+}
+
+model StockMovement {
+  id             String            @id @default(cuid())
+  productId      String
+  orderId        String?
+  kind           StockMovementKind
+  delta          Int
+  balanceAfter   Int
+  reason         String            @db.VarChar(500)
+  actorId        String?
+  productNameAr  String
+  productNameFr  String
+  productSku     String?
+  createdAt      DateTime          @default(now())
+  inventory      InventoryItem     @relation(fields: [productId], references: [productId], onDelete: Restrict)
+  orderInventory OrderInventory?   @relation(fields: [orderId], references: [orderId], onDelete: Restrict)
+
+  @@unique([orderId, productId, kind])
+  @@index([productId, createdAt])
+  @@index([createdAt])
+  @@map("stock_movements")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Offer packs — a bundle of products sold at one special price
+// ─────────────────────────────────────────────────────────────
+
+model Pack {
+  id            String        @id @default(cuid())
+  nameAr        String
+  nameFr        String
+  slug          String        @unique
+  descriptionAr String?       @db.Text
+  descriptionFr String?       @db.Text
+  price         Decimal       @db.Decimal(10, 2)
+  image         String?
+  status        ProductStatus @default(DRAFT)
+  isFeatured    Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  items      PackItem[]
+  orderItems OrderItem[]
+
+  @@index([status])
+  @@map("packs")
+}
+
+model PackItem {
+  packId    String
+  productId String
+  quantity  Int    @default(1)
+
+  pack    Pack    @relation(fields: [packId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@id([packId, productId])
+  @@index([productId])
+  @@map("pack_items")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Partners accounting — simple capital accounts, no VAT
+// ─────────────────────────────────────────────────────────────
+
+enum PartnerEntryKind {
+  CONTRIBUTION // money the partner put in / spent for the business
+  WITHDRAWAL // money the partner took out
+}
+
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  notes     String?  @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entries  PartnerEntry[]
+  expenses Expense[]
+
+  @@map("partners")
+}
+
+model PartnerEntry {
+  id        String           @id @default(cuid())
+  partnerId String
+  kind      PartnerEntryKind
+  amount    Decimal          @db.Decimal(10, 2)
+  date      DateTime
+  note      String?          @db.VarChar(500)
+  createdAt DateTime         @default(now())
+
+  partner Partner @relation(fields: [partnerId], references: [id], onDelete: Restrict)
+
+  @@index([partnerId, date])
+  @@index([date])
+  @@map("partner_entries")
+}
+
+/// Operating expense (ads, transport, packaging...). When a partner paid it
+/// out of pocket it also counts toward that partner's spending.
+model Expense {
+  id              String   @id @default(cuid())
+  label           String
+  category        String?  @db.VarChar(100)
+  amount          Decimal  @db.Decimal(10, 2)
+  date            DateTime
+  paidByPartnerId String?
+  createdAt       DateTime @default(now())
+
+  paidBy Partner? @relation(fields: [paidByPartnerId], references: [id], onDelete: Restrict)
+
+  @@index([date])
+  @@index([paidByPartnerId])
+  @@map("expenses")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Storefront traffic (first-party, anonymous, no IP stored)
+// ─────────────────────────────────────────────────────────────
+
+model SiteSession {
+  id           String   @id @db.VarChar(64) // client-generated random id
+  visitorId    String   @db.VarChar(64)
+  startedAt    DateTime @default(now())
+  lastSeenAt   DateTime @default(now())
+  pageViews    Int      @default(0)
+  landingPath  String   @db.VarChar(500)
+  referrer     String?  @db.VarChar(255) // host only
+  device       String   @db.VarChar(20) // mobile | tablet | desktop
+  isNewVisitor Boolean  @default(true)
+  // Approximate location resolved from the IP at session start (IP is never stored).
+  country      String?  @db.VarChar(2)
+  region       String?  @db.VarChar(10)
+  city         String?  @db.VarChar(120)
+  latitude     Float?
+  longitude    Float?
+
+  views PageView[]
+
+  @@index([startedAt])
+  @@index([country, startedAt])
+  @@index([visitorId])
+  @@map("site_sessions")
+}
+
+model PageView {
+  id        String   @id @default(cuid())
+  sessionId String   @db.VarChar(64)
+  path      String   @db.VarChar(500)
+  createdAt DateTime @default(now())
+
+  session SiteSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([sessionId])
+  @@map("page_views")
+}

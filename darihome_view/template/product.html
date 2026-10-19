@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>داري هوم — مقعد البلوط المصنوع يدويًا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          primary: "#442a22", "primary-container": "#5d4037", "on-primary": "#ffffff",
+          surface: "#f4faff", "surface-low": "#e9f6fd", "surface-c": "#e3f0f8",
+          "surface-high": "#ddeaf2", "surface-variant": "#d7e4ec",
+          "on-surface": "#111d23", "on-surface-variant": "#504441",
+          outline: "#827470", "outline-variant": "#d4c3be",
+          beige: "#ece0dc", wood: "#e0c9a6", blush: "#e7bdb1",
+        },
+        maxWidth: { container: "1280px" },
+      } },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/main.css?v=2" />
+  <script src="assets/js/i18n.js?v=2"></script>
+</head>
+
+<body data-title-key="meta.product_title" class="font-body bg-surface text-on-surface">
+
+  <!-- ============ Header (solid) ============ -->
+  <header class="site-header is-solid on-light sticky top-0 z-50 bg-surface" data-solid-at="0">
+    <div class="max-w-container mx-auto px-5 md:px-16">
+      <nav class="flex items-center justify-between h-20">
+        <a href="index.html" class="font-display text-2xl md:text-[28px] font-bold tracking-tight" data-i18n="brand.name">داري هوم</a>
+        <ul class="hidden lg:flex items-center gap-9 text-[15px]">
+          <li><a href="index.html" class="nav-link" data-i18n="nav.home">الرئيسية</a></li>
+          <li><a href="shop.html" class="nav-link is-active" data-i18n="nav.shop">المتجر</a></li>
+          <li><a href="shop.html" class="nav-link" data-i18n="nav.categories">الفئات</a></li>
+          <li><a href="index.html#story" class="nav-link" data-i18n="nav.about">من نحن</a></li>
+          <li><a href="index.html#newsletter" class="nav-link" data-i18n="nav.contact">اتصل بنا</a></li>
+        </ul>
+        <div class="flex items-center gap-1 sm:gap-2">
+          <button data-lang-toggle class="hidden sm:inline-flex items-center justify-center h-10 min-w-10 px-3 rounded border border-current/30 text-sm font-semibold hover:bg-primary hover:text-on-primary hover:border-primary transition-colors" aria-label="Language"><span data-i18n="nav.lang">FR</span></button>
+          <button class="h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.search"><span class="material-symbols-outlined">search</span></button>
+          <a href="#" class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.account"><span class="material-symbols-outlined">person</span></a>
+          <a href="#" class="relative h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.cart">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            <span data-cart-badge class="cart-badge hidden absolute -top-0.5 -end-0.5 min-w-5 h-5 px-1 rounded-full bg-primary text-on-primary text-[11px] font-semibold grid place-items-center">0</span>
+          </a>
+          <button data-open-menu class="lg:hidden h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5 transition-colors" data-i18n-attr="aria-label:nav.menu"><span class="material-symbols-outlined">menu</span></button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ Mobile drawer ============ -->
+  <div data-scrim class="scrim fixed inset-0 z-50 bg-black/40 lg:hidden"></div>
+  <aside data-drawer="menu" class="drawer fixed top-0 end-0 z-[55] h-full w-[82%] max-w-sm bg-surface shadow-2xl lg:hidden flex flex-col">
+    <div class="flex items-center justify-between h-20 px-6 border-b hairline">
+      <span class="font-display text-xl font-bold" data-i18n="brand.name">داري هوم</span>
+      <button data-close-menu class="h-10 w-10 inline-flex items-center justify-center rounded hover:bg-black/5" data-i18n-attr="aria-label:nav.close"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <nav class="flex-1 px-6 py-8">
+      <ul class="flex flex-col gap-6 text-lg font-display">
+        <li><a href="index.html" data-i18n="nav.home">الرئيسية</a></li>
+        <li><a href="shop.html" data-i18n="nav.shop">المتجر</a></li>
+        <li><a href="shop.html" data-i18n="nav.categories">الفئات</a></li>
+        <li><a href="index.html#story" data-i18n="nav.about">من نحن</a></li>
+        <li><a href="index.html#newsletter" data-i18n="nav.contact">اتصل بنا</a></li>
+      </ul>
+    </nav>
+    <div class="px-6 py-6 border-t hairline">
+      <button data-lang-toggle class="btn btn-ghost w-full py-3 text-sm"><span class="material-symbols-outlined text-[20px]">language</span><span data-i18n="nav.lang">FR</span></button>
+    </div>
+  </aside>
+
+  <main class="max-w-container mx-auto px-5 md:px-16 pt-8 md:pt-12 pb-20">
+
+    <!-- Breadcrumb -->
+    <nav class="flex flex-wrap items-center gap-2 text-sm text-on-surface-variant mb-8" aria-label="breadcrumb">
+      <a href="index.html" class="hover:text-primary" data-i18n="crumbs.home">الرئيسية</a>
+      <span class="material-symbols-outlined flip-rtl text-[16px]">chevron_left</span>
+      <a href="shop.html" class="hover:text-primary" data-i18n="crumbs.shop">المتجر</a>
+      <span class="material-symbols-outlined flip-rtl text-[16px]">chevron_left</span>
+      <a href="shop.html" class="hover:text-primary" data-i18n="crumbs.stools">المقاعد</a>
+      <span class="material-symbols-outlined flip-rtl text-[16px]">chevron_left</span>
+      <span class="text-on-surface font-medium" data-i18n="crumbs.product">مقعد البلوط اليدوي</span>
+    </nav>
+
+    <div class="grid lg:grid-cols-2 gap-8 lg:gap-16">
+
+      <!-- ============ Gallery ============ -->
+      <div class="reveal">
+        <div data-gallery-main class="zoomable rounded-lg overflow-hidden aspect-square bg-surface-low">
+          <img src="assets/images/stool-hero.jpg" alt="مقعد البلوط اليدوي" class="w-full h-full object-cover" />
+        </div>
+        <div class="grid grid-cols-4 gap-3 mt-3">
+          <button data-thumb data-src="assets/images/stool-hero.jpg" class="thumb is-active rounded overflow-hidden aspect-square bg-surface-low"><img src="assets/images/stool-hero.jpg" alt="" class="w-full h-full object-cover" /></button>
+          <button data-thumb data-src="assets/images/stool-rug.jpg" class="thumb rounded overflow-hidden aspect-square bg-surface-low"><img src="assets/images/stool-rug.jpg" alt="" class="w-full h-full object-cover" /></button>
+          <button data-thumb data-src="assets/images/stools-garden.jpg" class="thumb rounded overflow-hidden aspect-square bg-surface-low"><img src="assets/images/stools-garden.jpg" alt="" class="w-full h-full object-cover" /></button>
+          <button data-thumb data-src="assets/images/desk.jpg" class="thumb rounded overflow-hidden aspect-square bg-surface-low"><img src="assets/images/desk.jpg" alt="" class="w-full h-full object-cover" /></button>
+        </div>
+      </div>
+
+      <!-- ============ Buy box ============ -->
+      <div class="reveal" style="--reveal-delay:120ms" data-buy>
+        <h1 class="font-display text-4xl md:text-5xl font-semibold leading-tight" data-i18n="products.stool_kobenhavn">مقعد كوبنهاغن</h1>
+        <p class="text-on-surface-variant mt-1" data-i18n="crumbs.stools">المقاعد</p>
+        <div class="flex items-center flex-wrap gap-3 mt-4">
+          <span class="font-display text-3xl font-semibold text-primary">145 DT</span>
+          <span class="text-xl text-outline line-through">190 DT</span>
+          <span class="bg-wood text-primary px-2.5 py-1 rounded text-xs font-bold">-24%</span>
+        </div>
+
+        <p class="text-on-surface-variant leading-relaxed mt-6" data-i18n="product.details_body">
+          كل مقعد يُنحت يدويًا من خشب الصنوبر المنتقى، ثم يُصقل ويُعالج بالزيت الطبيعي لإبراز عروق الخشب. مثالي كمقعد إضافي أو طاولة جانبية.
+        </p>
+
+        <!-- Finish -->
+        <div class="mt-8">
+          <h3 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-3" data-i18n="product.finish">نوع الخشب</h3>
+          <div class="flex flex-wrap gap-3" data-variant-group>
+            <button aria-pressed="true" class="chip px-5 py-2.5 rounded text-sm border border-outline-variant aria-pressed:bg-blush aria-pressed:border-primary [&[aria-pressed=true]]:bg-blush [&[aria-pressed=true]]:border-primary [&[aria-pressed=true]]:font-semibold" data-i18n="shop.light_oak">بلوط فاتح</button>
+            <button aria-pressed="false" class="chip px-5 py-2.5 rounded text-sm border border-outline-variant [&[aria-pressed=true]]:bg-blush [&[aria-pressed=true]]:border-primary [&[aria-pressed=true]]:font-semibold" data-i18n="shop.dark_walnut">جوز داكن</button>
+          </div>
+        </div>
+
+        <!-- Quantity + actions -->
+        <div class="mt-8">
+          <h3 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-3" data-i18n="product.quantity">الكمية</h3>
+          <div class="flex flex-wrap items-stretch gap-3">
+            <div data-qty class="inline-flex items-center border border-outline-variant rounded overflow-hidden">
+              <button data-qty-dec class="h-12 w-12 grid place-items-center hover:bg-surface-high transition-colors" aria-label="-"><span class="material-symbols-outlined">remove</span></button>
+              <input type="text" inputmode="numeric" value="1" class="w-12 h-12 text-center bg-transparent border-0 focus:ring-0 font-semibold" aria-label="qty" />
+              <button data-qty-inc class="h-12 w-12 grid place-items-center hover:bg-surface-high transition-colors" aria-label="+"><span class="material-symbols-outlined">add</span></button>
+            </div>
+            <button data-add-cart data-added-text="أُضيف ✓" class="btn btn-primary flex-1 min-w-[180px] py-3.5 text-sm">
+              <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+              <span data-add-label data-i18n="product.add_to_cart">أضف إلى السلة</span>
+            </button>
+            <button class="h-12 w-12 grid place-items-center rounded border border-outline-variant hover:bg-surface-high transition-colors" data-i18n-attr="aria-label:nav.wishlist"><span class="material-symbols-outlined">favorite</span></button>
+          </div>
+        </div>
+
+        <!-- Accordions -->
+        <div class="mt-10 border-t hairline">
+          <div class="accordion is-open border-b hairline">
+            <button data-accordion-toggle aria-expanded="true" class="w-full flex items-center justify-between py-5 text-start">
+              <span class="text-xs font-semibold uppercase tracking-widest" data-i18n="product.specs">المواصفات</span>
+              <span class="material-symbols-outlined accordion-icon">expand_more</span>
+            </button>
+            <div class="accordion-body"><div><div class="pb-6 text-sm flex flex-col gap-2">
+              <p><span class="font-semibold" data-i18n="product.material_l">الخامة</span>: <span data-i18n="product.material_v">خشب صنوبر صلب</span></p>
+              <p><span class="font-semibold" data-i18n="product.dims_l">الأبعاد</span>: <span data-i18n="product.dims_v">45 سم ارتفاع × 30 سم عرض</span></p>
+              <p><span class="font-semibold" data-i18n="product.finish_l">التشطيب</span>: <span data-i18n="product.finish_v">زيت طبيعي</span></p>
+            </div></div></div>
+          </div>
+          <div class="accordion border-b hairline">
+            <button data-accordion-toggle aria-expanded="false" class="w-full flex items-center justify-between py-5 text-start">
+              <span class="text-xs font-semibold uppercase tracking-widest" data-i18n="product.details">التفاصيل والحِرفية</span>
+              <span class="material-symbols-outlined accordion-icon">expand_more</span>
+            </button>
+            <div class="accordion-body"><div><div class="pb-6 text-sm text-on-surface-variant leading-relaxed" data-i18n="product.details_body">
+              كل مقعد يُنحت يدويًا من خشب الصنوبر المنتقى، ثم يُصقل ويُعالج بالزيت الطبيعي لإبراز عروق الخشب.
+            </div></div></div>
+          </div>
+          <div class="accordion border-b hairline">
+            <button data-accordion-toggle aria-expanded="false" class="w-full flex items-center justify-between py-5 text-start">
+              <span class="text-xs font-semibold uppercase tracking-widest" data-i18n="product.delivery">التوصيل</span>
+              <span class="material-symbols-outlined accordion-icon">expand_more</span>
+            </button>
+            <div class="accordion-body"><div><div class="pb-6 text-sm text-on-surface-variant leading-relaxed" data-i18n="product.delivery_body">
+              توصيل خلال 3 إلى 5 أيام عمل لكامل الجمهورية.
+            </div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ Related ============ -->
+    <section class="mt-24">
+      <h2 class="font-display text-3xl md:text-4xl font-semibold text-center mb-12 reveal" data-i18n="product.related">قطع تُكمّل المشهد</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:0ms">
+          <a href="product.html" class="card-media block aspect-square bg-surface-low"><img src="assets/images/wall-shelves.jpg" alt="Fjord" class="w-full h-full object-cover" /></a>
+          <div class="p-4"><h3 class="font-display text-lg font-semibold" data-i18n="products.shelf_fjord">رفّ فيورد الجداري</h3><p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.shelves">الرفوف الجدارية</p><div class="flex items-baseline gap-2 mt-2"><span class="font-semibold text-primary">220 DT</span><span class="text-sm text-outline line-through">260 DT</span></div></div>
+        </article>
+        <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:80ms">
+          <a href="product.html" class="card-media block aspect-square bg-surface-low"><img src="assets/images/desk.jpg" alt="Skagen" class="w-full h-full object-cover" /></a>
+          <div class="p-4"><h3 class="font-display text-lg font-semibold" data-i18n="products.desk_skagen">مكتب سكاغن</h3><p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.tables">الطاولات</p><div class="flex items-baseline gap-2 mt-2"><span class="font-semibold">490 DT</span></div></div>
+        </article>
+        <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:160ms">
+          <a href="product.html" class="card-media block aspect-square bg-surface-low"><img src="assets/images/pet-house.jpg" alt="Aalborg" class="w-full h-full object-cover" /></a>
+          <div class="p-4"><h3 class="font-display text-lg font-semibold" data-i18n="products.pet_aalborg">بيت آلبورغ للحيوانات</h3><p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.pets">أثاث الحيوانات</p><div class="flex items-baseline gap-2 mt-2"><span class="font-semibold text-primary">380 DT</span><span class="text-sm text-outline line-through">450 DT</span></div></div>
+        </article>
+        <article class="product-card reveal bg-white rounded-lg overflow-hidden" style="--reveal-delay:240ms">
+          <a href="product.html" class="card-media block aspect-square bg-surface-low"><img src="assets/images/stool-rug.jpg" alt="Aarhus" class="w-full h-full object-cover" /></a>
+          <div class="p-4"><h3 class="font-display text-lg font-semibold" data-i18n="products.stool_aarhus">مقعد آرهوس</h3><p class="text-sm text-on-surface-variant mt-0.5" data-i18n="cats.stools">المقاعد</p><div class="flex items-baseline gap-2 mt-2"><span class="font-semibold">160 DT</span></div></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="bg-surface-variant pt-16 pb-8">
+    <div class="max-w-container mx-auto px-5 md:px-16">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div class="col-span-2 md:col-span-1">
+          <a href="index.html" class="font-display text-2xl font-bold" data-i18n="brand.name">داري هوم</a>
+          <p class="text-sm text-on-surface-variant mt-3 max-w-[220px]" data-i18n="footer.tagline">مصنوعة بدقّة وعناية.</p>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-4" data-i18n="footer.col_shop">المتجر</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li><a href="shop.html" class="hover:text-primary transition-colors" data-i18n="footer.all">كل المنتجات</a></li>
+            <li><a href="shop.html" class="hover:text-primary transition-colors" data-i18n="footer.furniture">الأثاث</a></li>
+            <li><a href="shop.html" class="hover:text-primary transition-colors" data-i18n="footer.accessories">الإكسسوارات</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-4" data-i18n="footer.col_service">الخدمة</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.faq">الأسئلة الشائعة</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.shipping">الشحن والإرجاع</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.care">دليل العناية</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-on-surface-variant mb-4" data-i18n="footer.col_contact">تواصل</h4>
+          <ul class="flex flex-col gap-3 text-sm">
+            <li><a href="index.html#newsletter" class="hover:text-primary transition-colors" data-i18n="footer.get_in_touch">تواصل معنا</a></li>
+            <li><a href="#" class="hover:text-primary transition-colors" data-i18n="footer.stores">المتاجر</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t hairline mt-12 pt-6 text-center">
+        <p class="text-sm text-on-surface-variant" data-i18n="footer.rights">© 2026 داري هوم. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js?v=2"></script>
+</body>
+</html>

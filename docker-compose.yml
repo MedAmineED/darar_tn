@@ -1,0 +1,134 @@
+# Darya — full stack (admin + visitors) for `docker compose up`.
+#
+#   docker compose up --build
+#
+# Then open:
+#   • Storefront (visitors) → http://localhost:3100
+#   • Admin dashboard       → http://localhost:3000   (admin@darihome.tn / ChangeMe123!)
+#   • API + Swagger docs    → http://localhost:4000/api/v1/docs
+#
+# All values below have sane defaults; override any of them by creating a
+# `.env` file next to this compose file (see .env.example).
+
+services:
+  # ── Database ──────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-darihome_admin}
+      MYSQL_USER: ${MYSQL_USER:-darihome}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-darihome}
+    ports:
+      - "${BIND_HOST:-0.0.0.0}:${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  # ── One-shot: apply migrations + seed, then exit ──────────
+  # Uses the backend build stage because it has the Prisma CLI + ts-node
+  # (the lean runtime image does not).
+  backend-migrate:
+    build:
+      context: ./admin/backend
+      target: build
+    command: sh -c "npx prisma migrate deploy && npm run db:seed"
+    environment:
+      DATABASE_URL: mysql://${MYSQL_USER:-darihome}:${MYSQL_PASSWORD:-darihome}@mysql:3306/${MYSQL_DATABASE:-darihome_admin}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@darihome.tn}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-ChangeMe123!}
+      SEED_ADMIN_FIRST_NAME: ${SEED_ADMIN_FIRST_NAME:-Super}
+      SEED_ADMIN_LAST_NAME: ${SEED_ADMIN_LAST_NAME:-Admin}
+      # Dev seeds demo catalog; prod .env sets SEED_DEMO=false.
+      SEED_DEMO: ${SEED_DEMO:-true}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+
+  # ── NestJS API (used by BOTH admin and storefront) ────────
+  backend:
+    build:
+      context: ./admin/backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      API_PREFIX: api/v1
+      DATABASE_URL: mysql://${MYSQL_USER:-darihome}:${MYSQL_PASSWORD:-darihome}@mysql:3306/${MYSQL_DATABASE:-darihome_admin}
+      # Browser origins allowed to call the API directly (admin + storefront).
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:3100,http://localhost:3002}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change-me-access-secret}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-15m}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-refresh-secret}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      REFRESH_COOKIE_NAME: ${REFRESH_COOKIE_NAME:-darihome_rt}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+      COOKIE_SAME_SITE: ${COOKIE_SAME_SITE:-lax}
+      THROTTLE_TTL: ${THROTTLE_TTL:-60}
+      THROTTLE_LIMIT: ${THROTTLE_LIMIT:-10}
+      UPLOADS_DIR: uploads
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-5}
+    ports:
+      - "${BIND_HOST:-0.0.0.0}:${BACKEND_PORT:-4000}:4000"
+    volumes:
+      - backend-uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+      backend-migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4000/api/v1/storefront/categories"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 25s
+
+  # ── Admin dashboard (Next.js) ─────────────────────────────
+  admin-front:
+    build:
+      context: ./admin/front
+      args:
+        # Public API URL as seen from the BROWSER (client-side calls).
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:4000/api/v1}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    ports:
+      - "${BIND_HOST:-0.0.0.0}:${ADMIN_PORT:-3000}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ── Storefront / visitors site (Next.js, SSR) ─────────────
+  storefront:
+    build:
+      context: ./darihome_view
+      args:
+        NEXT_PUBLIC_SITE_URL: ${STOREFRONT_URL:-http://localhost:3100}
+        NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD: ${FREE_SHIPPING_THRESHOLD:-300}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # Server-side data fetching over the internal Docker network.
+      API_BASE_URL: http://backend:4000/api/v1
+      # Product image host as seen from the BROWSER (images load client-side).
+      MEDIA_BASE_URL: ${PUBLIC_MEDIA_URL:-http://localhost:4000}
+      NEXT_PUBLIC_SITE_URL: ${STOREFRONT_URL:-http://localhost:3100}
+    ports:
+      - "${BIND_HOST:-0.0.0.0}:${STOREFRONT_PORT:-3100}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  mysql-data:
+  backend-uploads:

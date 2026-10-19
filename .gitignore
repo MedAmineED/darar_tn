@@ -1,4 +1,66 @@
+# ─────────────────────────────────────────────────────────────
+# Darya — repo-wide ignore (admin backend + admin front + storefront)
+# Patterns are recursive, so they apply inside every sub-app too.
+# ─────────────────────────────────────────────────────────────
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+
+# Environment & secrets  (real values stay local; only .env.example is shared)
 .env
 .env.*
 !.env.example
-node_modules/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Next.js / hosting
+.vercel
+.turbo
+
+# Ignore claude
+.claude
+docs/
+CLAUDE.md
+
+# Prisma (local sqlite scratch dbs, if any)
+*.db
+admin/backend/prisma/*.db
+
+# Uploaded files (local disk storage) — keep the folder, ignore its contents
+admin/backend/uploads/*
+!admin/backend/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Caches / coverage
+coverage/
+.cache/
+.eslintcache
+
+# Archives / design-tool raw exports (bloat — not needed to run the project)
+*.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.pem
+*.swp
+.idea/
+.vscode/
+
+# Claude Code local worktrees (not part of the project)
+.claude/worktrees/

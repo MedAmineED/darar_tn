@@ -14,6 +14,11 @@ async function bootstrap(): Promise<void> {
   });
   const config = app.get(AppConfigService);
 
+  // Behind a reverse proxy, take the client IP from X-Forwarded-For.
+  if (process.env.TRUST_PROXY) {
+    app.set('trust proxy', process.env.TRUST_PROXY);
+  }
+
   // Cross-origin images need CORP relaxed; keep other Helmet protections.
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
   app.use(cookieParser());

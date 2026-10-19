@@ -1,0 +1,41 @@
+# Production overrides for darar.tn — layered on docker-compose.yml.
+# Activated via COMPOSE_FILE in .env, so plain `docker compose ...` uses both.
+#
+# Data lives in two named volumes with FIXED names (independent of the folder
+# name). They survive `down`, rebuilds and redeploys. Never run `down -v`.
+
+name: darar
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  mysql:
+    # No host port: only the compose network can reach MySQL.
+    ports: !reset []
+    logging: *logging
+
+  backend-migrate:
+    logging: *logging
+
+  backend:
+    environment:
+      # nginx (host) and the storefront container are the only callers;
+      # trust their X-Forwarded-For so rate limits and logs see real IPs.
+      TRUST_PROXY: loopback, uniquelocal
+    logging: *logging
+
+  admin-front:
+    logging: *logging
+
+  storefront:
+    logging: *logging
+
+volumes:
+  mysql-data:
+    name: darar_mysql-data
+  backend-uploads:
+    name: darar_backend-uploads

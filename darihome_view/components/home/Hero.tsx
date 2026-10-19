@@ -41,7 +41,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
     <section className="hero-full">
       <div ref={layer} className="hero-media absolute inset-0 -z-10">
         <Image
-          src="/assets/images/daria-gero.jpeg"
+          src="/assets/images/darar_hero.jpeg"
           alt=""
           fill
           priority

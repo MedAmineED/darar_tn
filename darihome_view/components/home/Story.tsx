@@ -12,7 +12,7 @@ export function Story({ dict }: { dict: Dictionary }) {
           <div className="reveal relative">
             <div className="card-media rounded-lg overflow-hidden aspect-[4/5] relative">
               <Image
-                src="/assets/images/stools-garden.jpg"
+                src="/assets/images/about_pic.jpg"
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"

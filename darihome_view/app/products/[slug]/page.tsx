@@ -16,6 +16,7 @@ import { TrustRow } from '@/components/product/TrustRow';
 import { StickyBuyBar } from '@/components/product/StickyBuyBar';
 import { RecentlyViewed } from '@/components/product/RecentlyViewed';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { TrackViewContent } from '@/components/analytics/MetaPixel';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3100';
 
@@ -154,6 +155,7 @@ export default async function ProductPage({
         )}
       />
       <JsonLd data={breadcrumbJsonLd} />
+      <TrackViewContent slug={product.slug} name={product.nameFr || product.nameAr} price={product.price} />
 
       <nav
         className="flex flex-wrap items-center gap-2 text-sm text-on-surface-variant mb-8"

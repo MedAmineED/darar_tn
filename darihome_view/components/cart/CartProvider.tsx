@@ -15,6 +15,7 @@ import {
   type CartItem,
   type CartItemInput,
 } from '@/lib/cart';
+import { contentsOf, track } from '@/lib/pixel';
 
 interface CartContextValue {
   items: CartItem[];
@@ -82,6 +83,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           : [...current, { ...item, qty: Math.min(99, amount) }];
         window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(next));
         return next;
+      });
+      // Outside the updater: strict mode may run that twice.
+      const amount = Math.min(99, Math.max(1, qty));
+      track('AddToCart', {
+        ...contentsOf([{ slug: item.slug, price: item.price, qty: amount }]),
+        content_name: item.nameFr || item.nameAr,
+        value: item.price * amount,
       });
       setIsOpen(true);
     },

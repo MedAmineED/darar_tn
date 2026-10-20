@@ -16,6 +16,9 @@ ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 # deployment config rather than the source; empty falls back to the app default.
 ARG NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD
 ENV NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD=$NEXT_PUBLIC_FREE_SHIPPING_THRESHOLD
+# Meta Pixel id (public). Empty disables the pixel entirely.
+ARG NEXT_PUBLIC_META_PIXEL_ID
+ENV NEXT_PUBLIC_META_PIXEL_ID=$NEXT_PUBLIC_META_PIXEL_ID
 RUN npm run build
 
 # ── Runtime ─────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, type FormEvent } from 'react';
+import { useEffect, useRef, useState, useTransition, type FormEvent } from 'react';
 import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import { localize } from '@/lib/i18n/config';
@@ -11,6 +11,7 @@ import { useDelivery } from '@/components/cart/DeliveryProvider';
 import { deliveryFeeFor } from '@/lib/delivery';
 import { Icon } from '@/components/ui/Icon';
 import { submitOrder } from '@/lib/actions/checkout';
+import { contentsOf, track } from '@/lib/pixel';
 
 interface Success {
   orderNumber: string;
@@ -32,6 +33,14 @@ export function CheckoutForm({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<Success | null>(null);
 
+  // The cart hydrates from localStorage after mount, so wait for items once.
+  const checkoutTracked = useRef(false);
+  useEffect(() => {
+    if (checkoutTracked.current || items.length === 0) return;
+    checkoutTracked.current = true;
+    track('InitiateCheckout', { ...contentsOf(items), value: subtotal });
+  }, [items, subtotal]);
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -44,9 +53,12 @@ export function CheckoutForm({
       notes: String(form.get('notes') ?? ''),
       items: items.map((i) => ({ slug: i.slug, quantity: i.qty })),
     };
+    const lines = items.map((i) => ({ slug: i.slug, price: i.price, qty: i.qty }));
     start(async () => {
       const res = await submitOrder(payload);
       if (res.ok) {
+        // Order number as event id, for dedup with a future server-side event.
+        track('Purchase', { ...contentsOf(lines), value: res.total }, res.orderNumber);
         clear();
         setSuccess({ orderNumber: res.orderNumber, total: res.total });
       } else {

@@ -12,6 +12,8 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Tracker } from '@/components/analytics/Tracker';
+import { MetaPixel } from '@/components/analytics/MetaPixel';
+import { PIXEL_ID, pixelSnippet } from '@/lib/pixel';
 
 // Storefront must reflect admin changes immediately: force dynamic SSR on
 // every request and never cache upstream API fetches (no static/ISR cache).
@@ -84,6 +86,11 @@ export default async function RootLayout({
         tajawal.variable,
       )}
     >
+      {PIXEL_ID && (
+        <head>
+          <script dangerouslySetInnerHTML={{ __html: pixelSnippet(PIXEL_ID) }} />
+        </head>
+      )}
       <body className="font-body bg-surface text-on-surface">
         <DeliveryProvider value={delivery}>
           <CartProvider>
@@ -93,6 +100,7 @@ export default async function RootLayout({
             <CartDrawer locale={locale} dict={dict} />
             <ScrollReveal />
             <Tracker />
+            <MetaPixel />
           </CartProvider>
         </DeliveryProvider>
       </body>

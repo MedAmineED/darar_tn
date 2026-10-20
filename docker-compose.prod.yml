@@ -32,6 +32,10 @@ services:
     logging: *logging
 
   storefront:
+    build:
+      args:
+        # Meta Pixel id (public, not a secret). Empty disables the pixel.
+        NEXT_PUBLIC_META_PIXEL_ID: "2068182627155730"
     logging: *logging
 
 volumes:

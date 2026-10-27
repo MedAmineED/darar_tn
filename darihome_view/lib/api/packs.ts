@@ -1,5 +1,5 @@
 import 'server-only';
-import { apiGet } from './client';
+import { ApiError, apiGet } from './client';
 import { resolveMediaUrl } from '@/lib/media';
 
 export interface StorefrontPackItem {
@@ -27,12 +27,29 @@ export interface StorefrontPack {
   items: StorefrontPackItem[];
 }
 
-/** Active offer packs (bundles sold at one special price). */
-export async function getPacks(): Promise<StorefrontPack[]> {
-  const packs = await apiGet<StorefrontPack[]>('/storefront/packs');
-  return packs.map((pack) => ({
+function mapPack(pack: StorefrontPack): StorefrontPack {
+  return {
     ...pack,
     image: resolveMediaUrl(pack.image),
     items: pack.items.map((i) => ({ ...i, image: resolveMediaUrl(i.image) })),
-  }));
+  };
+}
+
+/** Active offer packs (bundles sold at one special price). */
+export async function getPacks(): Promise<StorefrontPack[]> {
+  const packs = await apiGet<StorefrontPack[]>('/storefront/packs');
+  return packs.map(mapPack);
+}
+
+/** One active pack by slug, or null when it is missing or unpublished. */
+export async function getPack(slug: string): Promise<StorefrontPack | null> {
+  try {
+    const pack = await apiGet<StorefrontPack>(
+      `/storefront/packs/${encodeURIComponent(slug)}`,
+    );
+    return mapPack(pack);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return null;
+    throw err;
+  }
 }

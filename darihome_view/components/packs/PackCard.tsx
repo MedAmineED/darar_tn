@@ -32,7 +32,11 @@ export function PackCard({
       className="reveal bg-white rounded-lg overflow-hidden flex flex-col"
       style={{ '--reveal-delay': `${(index % 3) * 80}ms` } as CSSProperties}
     >
-      <div className="relative aspect-[4/3] bg-surface-low">
+      <Link
+        href={`/packs/${pack.slug}`}
+        className="relative block aspect-[4/3] bg-surface-low"
+        aria-label={name}
+      >
         {pack.image ? (
           <Image
             src={pack.image}
@@ -54,10 +58,12 @@ export function PackCard({
             -{pack.discountPercentage}%
           </span>
         )}
-      </div>
+      </Link>
       <div className="p-5 flex flex-col gap-3 flex-1">
         <h3 className="font-display text-xl font-semibold leading-snug">
-          {name}
+          <Link href={`/packs/${pack.slug}`} className="hover:text-primary">
+            {name}
+          </Link>
         </h3>
         {description && (
           <p className="text-sm text-on-surface-variant line-clamp-3">

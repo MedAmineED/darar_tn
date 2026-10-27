@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
+import { Toggle } from '@/components/ui/toggle';
 import { Pagination } from '@/components/ui/pagination';
 import { EmptyState } from '@/components/common/empty-state';
 import { FilterToolbar, FilterField } from '@/components/common/filter-toolbar';
@@ -21,7 +22,11 @@ import { useLocale } from '@/contexts/locale-context';
 import { assetUrl, formatPrice } from '@/lib/utils';
 import { getApiErrorMessage } from '@/lib/api/client';
 import type { Product, ProductStatus } from '@/lib/api/catalog-types';
-import { useProducts, useDeleteProduct } from '@/hooks/use-products';
+import {
+  useProducts,
+  useDeleteProduct,
+  useUpdateProduct,
+} from '@/hooks/use-products';
 import { useCategories } from '@/hooks/use-categories';
 import { useAuth } from '@/providers/auth-provider';
 
@@ -58,6 +63,8 @@ export default function ProductsPage() {
   });
   const { data: cats } = useCategories({ limit: 100 });
   const remove = useDeleteProduct();
+  const update = useUpdateProduct();
+  const [toggling, setToggling] = useState<string | null>(null);
 
   const resetPage = () => setPage(1);
 
@@ -69,6 +76,23 @@ export default function ProductsPage() {
       setToDelete(null);
     } catch (error) {
       toast.error(getApiErrorMessage(error));
+    }
+  };
+
+  // One-click publish/unpublish from the list: ACTIVE shows the product on
+  // the storefront, INACTIVE hides it.
+  const toggleActive = async (product: Product, active: boolean) => {
+    setToggling(product.id);
+    try {
+      await update.mutateAsync({
+        id: product.id,
+        input: { status: active ? 'ACTIVE' : 'INACTIVE' },
+      });
+      toast.success(strings.common.saved);
+    } catch (error) {
+      toast.error(getApiErrorMessage(error));
+    } finally {
+      setToggling(null);
     }
   };
 
@@ -286,7 +310,16 @@ export default function ProductsPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <StatusBadge status={product.status} />
+                        <div className="flex items-center gap-2">
+                          {canWrite && (
+                            <Toggle
+                              checked={product.status === 'ACTIVE'}
+                              disabled={toggling === product.id}
+                              onChange={(v) => toggleActive(product, v)}
+                            />
+                          )}
+                          <StatusBadge status={product.status} />
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-1">

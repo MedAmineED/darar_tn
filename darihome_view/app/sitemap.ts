@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getProducts } from '@/lib/api/products';
+import { getPacks } from '@/lib/api/packs';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3100';
 
@@ -31,5 +32,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // If the API is unavailable at build time, ship the static routes only.
   }
 
-  return [...staticRoutes, ...products];
+  const packs: MetadataRoute.Sitemap = await getPacks()
+    .then((list) =>
+      list.map((pack) => ({
+        url: `${siteUrl}/packs/${pack.slug}`,
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      })),
+    )
+    .catch(() => []);
+
+  return [...staticRoutes, ...products, ...packs];
 }

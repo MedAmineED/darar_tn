@@ -163,6 +163,9 @@ export interface Dictionary {
     save: string;
     viewAll: string;
     empty: string;
+    contents: string;
+    separately: string;
+    others: string;
   };
 }
 
@@ -341,6 +344,9 @@ const ar: Dictionary = {
     save: 'وفّر',
     viewAll: 'كل الباقات',
     empty: 'لا توجد باقات متاحة حاليًا.',
+    contents: 'محتوى الباقة',
+    separately: 'السعر عند شراء القطع منفردة:',
+    others: 'باقات أخرى',
   },
 };
 
@@ -520,6 +526,9 @@ const fr: Dictionary = {
     save: 'Économisez',
     viewAll: 'Tous les packs',
     empty: 'Aucun pack disponible pour le moment.',
+    contents: 'Contenu du pack',
+    separately: 'Prix des pièces achetées séparément :',
+    others: 'Autres packs',
   },
 };
 

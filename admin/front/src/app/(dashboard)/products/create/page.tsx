@@ -3,10 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
+import { toast } from 'sonner';
 import { PageHeader } from '@/components/layout/page-header';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { ProductForm } from '@/components/products/product-form';
+import { PendingImages } from '@/components/products/pending-images';
+import { getApiErrorMessage } from '@/lib/api/client';
+import { uploadProductImages } from '@/lib/api/products';
+import type { Product } from '@/lib/api/catalog-types';
 import { useLocale } from '@/contexts/locale-context';
 import { useCategories } from '@/hooks/use-categories';
 
@@ -21,6 +26,23 @@ export default function CreateProductPage() {
     );
   }, []);
   const { data, isLoading } = useCategories({ limit: 100 });
+  const [images, setImages] = useState<File[]>([]);
+
+  const onSaved = async (product: Product) => {
+    if (images.length > 0) {
+      try {
+        await uploadProductImages(product.id, images);
+      } catch (error) {
+        // The product exists; images can still be added from its edit page.
+        toast.error(getApiErrorMessage(error));
+      }
+    }
+    router.push(
+      returnToInventory
+        ? `/inventory?search=${encodeURIComponent(product.sku || product.nameFr)}`
+        : `/products/${product.id}/edit`,
+    );
+  };
 
   return (
     <div>
@@ -45,13 +67,8 @@ export default function CreateProductPage() {
       ) : (
         <ProductForm
           categories={data?.items ?? []}
-          onSaved={(product) =>
-            router.push(
-              returnToInventory
-                ? `/inventory?search=${encodeURIComponent(product.sku || product.nameFr)}`
-                : `/products/${product.id}/edit`,
-            )
-          }
+          onSaved={onSaved}
+          extraSection={<PendingImages files={images} onChange={setImages} />}
         />
       )}
     </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -75,10 +76,17 @@ type FormValues = z.infer<ReturnType<typeof createSchema>>;
 interface Props {
   product?: Product;
   categories: Category[];
-  onSaved: (product: Product) => void;
+  onSaved: (product: Product) => void | Promise<void>;
+  /** Extra card rendered above the save button (e.g. images on create). */
+  extraSection?: ReactNode;
 }
 
-export function ProductForm({ product, categories, onSaved }: Props) {
+export function ProductForm({
+  product,
+  categories,
+  onSaved,
+  extraSection,
+}: Props) {
   const { strings, t } = useLocale();
   const { hasPermission } = useAuth();
   const canOpenStock = !product && hasPermission('inventory:adjust');
@@ -102,7 +110,7 @@ export function ProductForm({ product, categories, onSaved }: Props) {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     values: {
@@ -160,7 +168,7 @@ export function ProductForm({ product, categories, onSaved }: Props) {
               : {}),
           });
       toast.success(strings.common.saved);
-      onSaved(saved);
+      await onSaved(saved);
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     }
@@ -450,11 +458,12 @@ export function ProductForm({ product, categories, onSaved }: Props) {
           )}
         </CardContent>
       </Card>
+      {extraSection}
       <div className="sticky bottom-0 flex justify-start gap-3 border-t border-outline-variant bg-background/95 py-4">
         <Button
           type="submit"
           size="lg"
-          isLoading={create.isPending || update.isPending}
+          isLoading={create.isPending || update.isPending || isSubmitting}
         >
           {strings.common.save}
         </Button>

@@ -145,7 +145,11 @@ export class StorefrontService {
       skip: (page - 1) * limit,
       take: limit,
       where,
-      orderBy: this.orderBy(query.sort),
+      // The homepage selection keeps the order chosen in the dashboard.
+      orderBy:
+        query.featured === 'true'
+          ? [{ featuredOrder: 'asc' }, { createdAt: 'desc' }]
+          : this.orderBy(query.sort),
     });
 
     return buildPaginatedResult(

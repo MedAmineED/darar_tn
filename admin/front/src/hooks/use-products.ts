@@ -5,6 +5,7 @@ import {
   deleteProductImage,
   getProduct,
   listProducts,
+  setFeaturedProducts,
   setPrimaryImage,
   updateProduct,
   uploadProductImages,
@@ -41,6 +42,14 @@ export function useCreateProduct() {
       qc.invalidateQueries({ queryKey: ['inventory'] });
       qc.invalidateQueries({ queryKey: ['dashboard'] });
     },
+  });
+}
+
+export function useSetFeaturedProducts() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (productIds: string[]) => setFeaturedProducts(productIds),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [KEY] }),
   });
 }
 

@@ -40,7 +40,9 @@ export class ProductsRepository {
     skip: number;
     take: number;
     where: Prisma.ProductWhereInput;
-    orderBy: Prisma.ProductOrderByWithRelationInput;
+    orderBy:
+      | Prisma.ProductOrderByWithRelationInput
+      | Prisma.ProductOrderByWithRelationInput[];
   }): Promise<[ProductWithRelations[], number]> {
     return this.prisma.$transaction([
       this.prisma.product.findMany({

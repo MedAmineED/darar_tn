@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ImageOff, Package, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ImageOff, Package, Pencil, Plus, Star, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/layout/page-header';
 import { Button } from '@/components/ui/button';
@@ -103,12 +103,23 @@ export default function ProductsPage() {
       <PageHeader
         title={p.title}
         action={
-          canCreate && (
-            <Button onClick={() => router.push('/products/create')}>
-              <Plus className="h-4 w-4" />
-              {p.add}
-            </Button>
-          )
+          <div className="flex gap-2">
+            {canWrite && (
+              <Button
+                variant="secondary"
+                onClick={() => router.push('/products/featured')}
+              >
+                <Star className="h-4 w-4" />
+                {t('منتجات الصفحة الرئيسية', 'Produits de l’accueil')}
+              </Button>
+            )}
+            {canCreate && (
+              <Button onClick={() => router.push('/products/create')}>
+                <Plus className="h-4 w-4" />
+                {p.add}
+              </Button>
+            )}
+          </div>
         }
       />
 

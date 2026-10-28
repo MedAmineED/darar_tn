@@ -13,6 +13,7 @@ import { InventoryService } from '../inventory/inventory.service';
 import { stockTransaction } from '../inventory/stock-transactions';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
+import { SetFeaturedDto } from './dto/set-featured.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductResponse, toProductResponse } from './product.mapper';
 import {
@@ -180,6 +181,36 @@ export class ProductsService {
     }
 
     return toProductResponse(await this.repository.update(id, data));
+  }
+
+  /**
+   * Replaces the homepage selection: the given products become featured in
+   * that order, every other product stops being featured.
+   */
+  async setFeatured(dto: SetFeaturedDto): Promise<{ productIds: string[] }> {
+    const ids = dto.productIds;
+    const found = await this.prisma.product.count({
+      where: { id: { in: ids } },
+    });
+    if (found !== ids.length) {
+      throw new NotFoundException({
+        message: 'Product not found',
+        code: 'PRODUCT_NOT_FOUND',
+      });
+    }
+    await this.prisma.$transaction([
+      this.prisma.product.updateMany({
+        where: { id: { notIn: ids }, isFeatured: true },
+        data: { isFeatured: false, featuredOrder: 0 },
+      }),
+      ...ids.map((id, index) =>
+        this.prisma.product.update({
+          where: { id },
+          data: { isFeatured: true, featuredOrder: index },
+        }),
+      ),
+    ]);
+    return { productIds: ids };
   }
 
   async remove(id: string): Promise<{ id: string }> {

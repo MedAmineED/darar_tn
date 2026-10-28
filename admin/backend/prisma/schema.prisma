@@ -190,6 +190,8 @@ model Product {
   costPrice          Decimal?      @db.Decimal(10, 2)
   status             ProductStatus @default(DRAFT)
   isFeatured         Boolean       @default(false)
+  // Position in the homepage "featured" section (ascending).
+  featuredOrder      Int           @default(0)
   categoryId         String?
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt

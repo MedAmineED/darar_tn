@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { AuthenticatedUser } from '../../common/interfaces/authenticated-user.in
 import { AuditService } from '../audit/audit.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
+import { SetFeaturedDto } from './dto/set-featured.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
 
@@ -60,6 +62,22 @@ export class ProductsController {
       });
     }
     return this.productsService.create(dto, actor.id);
+  }
+
+  @Put('featured')
+  @RequirePermissions('product:update')
+  async setFeatured(
+    @Body() dto: SetFeaturedDto,
+    @CurrentUser('id') actorId: string,
+  ) {
+    const result = await this.productsService.setFeatured(dto);
+    await this.auditService.record({
+      userId: actorId,
+      action: 'product.featured_updated',
+      entity: 'Product',
+      metadata: { productIds: dto.productIds },
+    });
+    return result;
   }
 
   @Patch(':id')

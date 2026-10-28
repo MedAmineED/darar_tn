@@ -47,6 +47,7 @@ export interface Product {
   discountPercentage: number | null;
   status: ProductStatus;
   isFeatured: boolean;
+  featuredOrder: number;
   categoryId: string | null;
   category: { id: string; nameAr: string; nameFr: string; slug: string } | null;
   images: ProductImage[];

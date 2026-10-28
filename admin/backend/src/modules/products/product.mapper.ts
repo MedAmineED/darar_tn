@@ -26,6 +26,7 @@ export interface ProductResponse {
   discountPercentage: number | null;
   status: ProductStatus;
   isFeatured: boolean;
+  featuredOrder: number;
   categoryId: string | null;
   category: {
     id: string;
@@ -71,6 +72,7 @@ export function toProductResponse(
     discountPercentage: discountPercentage(price, oldPrice),
     status: product.status,
     isFeatured: product.isFeatured,
+    featuredOrder: product.featuredOrder,
     categoryId: product.categoryId,
     category: product.category,
     images: product.images.map((image) => ({

@@ -17,6 +17,11 @@ export async function listProducts(
   return unwrap(res);
 }
 
+/** Replaces the homepage selection with these products, in this order. */
+export async function setFeaturedProducts(productIds: string[]): Promise<void> {
+  await apiClient.put('/products/featured', { productIds });
+}
+
 export async function getProduct(id: string): Promise<Product> {
   const res = await apiClient.get<ApiSuccess<Product>>(`/products/${id}`);
   return unwrap(res);
